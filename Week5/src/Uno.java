@@ -52,20 +52,29 @@ public class Uno {
 		//check player cards to see if they match color, rank of pile card or if player has wild card to play.
 		String matchedCard = game.playableCard(pile, player1, "player1");
 		if (matchedCard == null) {
-			System.out.println("No cards to play, not even a Wild card :-(");
-		}			
+			System.out.println("No cards to play, not even a Wild card :-( ..Draw card\n");
+			dealer.dealCard(gameDeck, player1, 1);
+			System.out.println("New card added for player, any matches?\n" + player1 + "\n");
+			matchedCard = game.playableCard(pile, player1, "player1");
+			if (matchedCard == null) {
+				System.out.println("Still no playable card, next players turn\n");
+			}
+			else {
+				game.playCard(pile, player1, matchedCard);
+			}
+		}
+		else {
+			game.playCard(pile, player1, matchedCard);
+		}
 	}
 }
 
 class Player{
-	//need to change this to create ArrayList per player, for now create players in main
-	public ArrayList<String> createPlayers() {
-		System.out.println("Creating Players:");
-		ArrayList<String> players = new ArrayList<String>();
-		players.add("Player 1");
-		players.add("Player 2");
-		players.add("Player 3");
-		players.add("Player 4");
+	//need to change this to create new ArrayList per playerName, for now create players in main
+	public List<String> createPlayers(String playerName) {
+		System.out.println("Creating Player: " + playerName);
+		List<String> players = new ArrayList<String>();
+		players.add(playerName);
 		System.out.println("Done");
 		return players;
 	}
@@ -169,7 +178,16 @@ class Game{
 				return playerCards.get(i);					
 				}
 			}
-		System.out.println("Nope, nothing found. Player should draw...");
+		System.out.println("Nope, nothing found.");
 		return null; 
+	}
+	public void playCard(List<String> pileCards, List<String> playerCards, String matchedCard) {
+		int indexOfmatchedCard = playerCards.indexOf(matchedCard);
+		
+		System.out.println("Player has match, dropping card to pile");
+		pileCards.add(0,matchedCard);
+		playerCards.remove(indexOfmatchedCard);
+		System.out.println(pileCards);
+		System.out.println(playerCards);
 	}
 }
